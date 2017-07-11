@@ -1,0 +1,12 @@
+swagger: "2.0"
+info:
+  title: "Session Monitoring REST"
+  description: "Session Monitoring REST"
+  version: "development"
+paths:
+  /events:
+    get:
+      summary: "Gets events"
+      responses:
+        200:
+          description: "Everything's shiny, Captain, not to fret."
