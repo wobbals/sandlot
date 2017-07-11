@@ -1,1 +1,7 @@
+# Site settings
+title: Sandpit
+baseurl: "/sandpit" # the subpath of your site, e.g. /blog/
+url: "http://wobbals.github.io/sandpit/" # the base hostname & protocol for your site
 
+# Build settings
+markdown: kramdown
