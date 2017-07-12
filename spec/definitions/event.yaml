@@ -1,0 +1,14 @@
+type: object
+description: A Session Monitoring event
+properties:
+  sessionId:
+    description: The session ID for this event
+    example: 2_MX4xMzExMjU3MX5-MTQ3MDI1NzY3OTkxOH45QXRr
+    type: string
+  projectId:
+    description: The project ID for this session
+    type: string
+  timestamp:
+    description: The timestamp this event occurred.
+    type: integer
+

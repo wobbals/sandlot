@@ -1,0 +1,29 @@
+get:
+  summary: Gets events for the project
+  produces:
+    - application/json
+  parameters:
+    - name: event
+      in: query
+      description: event names that need to be filtered
+      required: false
+      type: array
+      items:
+        type: string
+        enum:
+          - connectionCreated
+          - connectionDestroyed
+          - streamCreated
+          - streamDestroyed
+    - name: since
+      in: query
+      description: >-
+        Lower bound on the time of event. Events returned will not be earlier
+        than this timestamp.
+      required: false
+      type: integer
+  responses:
+    '200':
+      description: 'Everything''s shiny, Captain, not to fret.'
+      schema:
+        $ref: "#/definitions/event"
