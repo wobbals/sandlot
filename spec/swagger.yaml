@@ -3,3 +3,24 @@ info:
   title: Session Monitoring REST
   description: Session Monitoring REST
   version: development
+host: 127.0.0.1
+basePath: /
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+################################################################################
+parameters:
+  resourceId:
+    name: id
+    in: path
+    description: The resource identifier string
+    type: string
+    required: true
+################################################################################
+headers:
+  Pagination-Total:
+    description: Total number of records for this paged query
+    type: integer

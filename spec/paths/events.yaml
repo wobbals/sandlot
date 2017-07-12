@@ -5,7 +5,7 @@ get:
   parameters:
     - name: event
       in: query
-      description: event names that need to be filtered
+      description: Filters for the given event names
       required: false
       type: array
       items:
@@ -15,6 +15,11 @@ get:
           - connectionDestroyed
           - streamCreated
           - streamDestroyed
+    - name: sessionId
+      in: query
+      description: Filters for events belonging to a given session ID
+      required: false
+      type: string
     - name: since
       in: query
       description: >-
@@ -22,8 +27,31 @@ get:
         than this timestamp.
       required: false
       type: integer
+    - name: until
+      in: query
+      description: >-
+        Upper bound on the time of event. Events returned will not be later than
+        this timestamp.
+      required: false
+      type: integer
+    - name: offset
+      in: query
+      description: Pagination offset for the given query.
+      required: false
+      type: integer
+    - name: count
+      in: query
+      description: The number of results to include in the response.
+      default: 100
+      minimum: 1
+      maximum: 100
+      required: false
+      type: integer
   responses:
     '200':
       description: 'Everything''s shiny, Captain, not to fret.'
+      headers:
+        Pagination-Total:
+          $ref: '#/headers/Pagination-Total'
       schema:
-        $ref: "#/definitions/event"
+        $ref: '#/definitions/event'
