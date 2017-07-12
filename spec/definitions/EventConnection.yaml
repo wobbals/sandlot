@@ -1,0 +1,13 @@
+type: object
+description: An event summary for a Connection
+properties:
+  connectionId:
+    type: string
+    description: A unique identifier for this connection
+    example: c053fcc8
+  createdAt:
+    type: integer
+    description: Timestamp of the creation time for this connection
+  data:
+    type: string
+    description: The token data for this connection.

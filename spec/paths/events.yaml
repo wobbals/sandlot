@@ -1,7 +1,7 @@
 get:
+  tags:
+      - Session Monitoring Events
   summary: Gets events for the project
-  produces:
-    - application/json
   parameters:
     - name: event
       in: query
@@ -54,4 +54,6 @@ get:
         Pagination-Total:
           $ref: '#/headers/Pagination-Total'
       schema:
-        $ref: '#/definitions/event'
+        type: array
+        items:
+            $ref: '#/definitions/EventConnection'

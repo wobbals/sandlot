@@ -1,7 +1,20 @@
 swagger: '2.0'
 info:
-  title: Session Monitoring REST
-  description: Session Monitoring REST
+  title: OpenTok Informatics API
+  description: |
+    # Introduction
+    OpenTok application usage data can be useful for developers for both
+    monitoring app health as well as for managing apps themselves. This project
+    aims to enable both.
+    ## Events
+    Session Monitoring events are sent both as a callback as well as made
+    available temporarily through
+    [Session Monitoring Events](#tag/Session-Monitoring-Events).
+    ## Objects
+    Over the course of a session, some stateful data about basic OpenTok
+    entities accumulates. The [Session Objects](#tag/Session-Objects) API
+    discloses a summary of these basic objects.
+
   version: development
 host: 127.0.0.1
 basePath: /
@@ -11,7 +24,16 @@ produces:
   - application/json
 consumes:
   - application/json
+
 ################################################################################
+tags:
+  - name: Session Monitoring Events
+    description: Events tied to Session Monitoring Callbacks
+  - name: Session Objects
+    description: OpenTok application data
+
+################################################################################
+
 parameters:
   resourceId:
     name: id
@@ -19,6 +41,7 @@ parameters:
     description: The resource identifier string
     type: string
     required: true
+
 ################################################################################
 headers:
   Pagination-Total:

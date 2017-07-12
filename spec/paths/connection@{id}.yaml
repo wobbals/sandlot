@@ -1,0 +1,9 @@
+get:
+  tags:
+    - Session Objects
+  description: Describe a Connection
+  responses:
+    200:
+      description: OK
+      schema:
+        $ref: '#/definitions/ObjectConnection'

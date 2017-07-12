@@ -2,9 +2,9 @@ type: object
 description: A Session Monitoring event
 properties:
   sessionId:
-    description: The session ID for this event
-    example: 2_MX4xMzExMjU3MX5-MTQ3MDI1NzY3OTkxOH45QXRr
-    type: string
+    description: The Session ID for this event
+    allOf:
+      - $ref: '#/definitions/sessionId'
   projectId:
     description: The project ID for this session
     type: string
@@ -21,4 +21,4 @@ properties:
       - streamDestroyed
   connection:
     allOf:
-      - $ref: '#/definitions/connection'
+      - $ref: '#/definitions/EventConnection'

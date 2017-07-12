@@ -1,0 +1,29 @@
+type: object
+description: a Session description
+properties:
+  sessionId:
+    description: The ID of this session
+    $ref: '#/definitions/sessionId'
+  startedAt:
+    type: integer
+    description: The timestamp of the first connection joined to this session.
+  completedAt:
+    type: integer
+    description: >-
+      The timestamp of the last disconnect from this session, resulting in zero
+      total connections to the session. Note that if a session
+      is reused for multiple conversations between endpoints, the difference
+      between this and the startedAt field will not reflect the time between
+      different conversations.
+  duration:
+    type: integer
+    description: the number of seconds this session was live
+  type:
+    description: the type of session
+    type: string
+    enum:
+      - routed
+      - relayed
+  projectId:
+    type: integer
+    description: the project to which this session belongs

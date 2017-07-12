@@ -1,5 +1,5 @@
 type: object
-description: A Connection object
+description: A connection Object
 properties:
   connectionId:
     type: string

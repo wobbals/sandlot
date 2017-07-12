@@ -1,8 +1,6 @@
 {
   "generator-openapi-repo": {
-    "importExistingSpec": true,
-    "importedSpec": "monitoring.yml",
-    "name": "sandlot",
+    "name": "Informatics",
     "repo": "wobbals/sandlot",
     "splitSpec": true,
     "samples": true,
