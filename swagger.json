@@ -1,0 +1,52 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Session Monitoring REST",
+    "description": "Session Monitoring REST",
+    "version": "development"
+  },
+  "paths": {
+    "/events": {
+      "get": {
+        "summary": "Gets events for the project",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "event",
+            "in": "query",
+            "description": "event names that need to be filtered",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "connectionCreated",
+                "connectionDestroyed",
+                "streamCreated",
+                "streamDestroyed"
+              ],
+              "default": "All events will be returned"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Lower bound on the time of event. Events returned will not be earlier than this timestamp.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Everything's shiny, Captain, not to fret.",
+            "examples": {
+              "application/json": "{\n  \"events\": [\n    {\n      \"sessionId\": \"2_MX4xMzExMjU3MX5-MTQ3MDI1NzY3OTkxOH45QXRr\",\n      \"projectId\": \"123456\",\n      \"event\": \"connectionCreated\",\n      \"timestamp\": 1470257688309,\n      \"connection\": {\n        \"id\": \"c053fcc8-c681-41d5-8ec2-7a9e1434a21e\",\n        \"createdAt\": 1470257688143,\n        \"data\": \"TOKENDATA\"\n      }\n    }\n  ]\n}\n"
+            }
+          }
+        }
+      }
+    }
+  }
+}
