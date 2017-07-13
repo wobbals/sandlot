@@ -56,4 +56,4 @@ get:
       schema:
         type: array
         items:
-            $ref: '#/definitions/EventConnection'
+            $ref: '#/definitions/event'
