@@ -1,0 +1,16 @@
+type: object
+description: >-
+  An event summary for a Stream event. Object will only be present if event type
+  is one of `streamCreated` or `streamDestroyed`.
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  videoType:
+    type: string
+    enum:
+      - camera
+      - screen
+  connection:
+    $ref: '#/definitions/ConnectionEvent'
