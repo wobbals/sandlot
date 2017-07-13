@@ -1,4 +1,4 @@
-# sandlot OpenAPI Specification
+# Informatics OpenAPI Specification
 [![Build Status](https://travis-ci.org/wobbals/sandlot.svg?branch=master)](https://travis-ci.org/wobbals/sandlot)
 
 ## Steps to finish

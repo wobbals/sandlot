@@ -15,6 +15,13 @@ info:
     entities accumulates. The [Session Objects](#tag/Session-Objects) API
     discloses a summary of these basic objects.
 
+    ## Unanswered questions
+    * Timestamp formatting needs to change. Use ISO8601, you savages.
+    * To search or not to search, that is the question we need to answer about
+    how to make the Objects API more discoverable.
+    * Events API 1.1: Add session, publisher, and subscriber events.
+    * Data export for QoS raw data
+
   version: development
 host: 127.0.0.1
 basePath: /
