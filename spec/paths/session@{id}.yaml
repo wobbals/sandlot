@@ -2,6 +2,8 @@ get:
   tags:
     - Session Objects
   description: Describe a Session
+  parameters:
+    - $ref: '#/parameters/resourceId'
   responses:
     200:
       description: OK
