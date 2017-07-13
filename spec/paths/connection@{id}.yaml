@@ -8,4 +8,4 @@ get:
     200:
       description: OK
       schema:
-        $ref: '#/definitions/ObjectConnection'
+        $ref: '#/definitions/ConnectionObject'

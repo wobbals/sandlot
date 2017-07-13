@@ -21,4 +21,7 @@ properties:
       - streamDestroyed
   connection:
     allOf:
-      - $ref: '#/definitions/EventConnection'
+      - $ref: '#/definitions/ConnectionEvent'
+  stream:
+    allOf:
+      - $ref: '#/definitions/StreamEvent'
