@@ -1,7 +1,7 @@
 type: object
 description: a Session description
 properties:
-  sessionId:
+  id:
     description: The ID of this session
     $ref: '#/definitions/sessionId'
   startedAt:
@@ -27,3 +27,18 @@ properties:
   projectId:
     type: integer
     description: the project to which this session belongs
+  publishers:
+    type: array
+    items:
+      allOf:
+        - $ref: '#/definitions/Publisher'
+  subscribers:
+    type: array
+    items:
+      allOf:
+        - $ref: '#/definitions/Subscriber'
+  connections:
+    type: array
+    items:
+      allOf:
+        - $ref: '#/definitions/ObjectConnection'

@@ -1,0 +1,13 @@
+type: object
+properties:
+  createdAt:
+    type: integer
+    description: The time this object was created.
+  destroyedAt:
+    type: intger
+    description: The timestamp this object was destroyed.
+  duration:
+    type: integer
+    description: The amount of time this object was alive, in seconds.
+  sessionId:
+    $ref: '#/definitions/sessionId'

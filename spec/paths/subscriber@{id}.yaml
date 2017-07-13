@@ -1,11 +1,11 @@
 get:
   tags:
     - Session Objects
-  description: Describe a Session
+  description: Describe a Subscriber
   parameters:
     - $ref: '#/parameters/resourceId'
   responses:
     200:
       description: OK
       schema:
-        $ref: "#/definitions/Session"
+        $ref: '#/definitions/Subscriber'

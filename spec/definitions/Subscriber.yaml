@@ -1,0 +1,44 @@
+type: object
+description: >-
+  Represents a Subscriber.
+properties:
+  id:
+    type: string
+    description: >-
+      A unique identifier for the subscriber.
+  streamId:
+    type: string
+    description: The Stream ID for this subscriber.
+  connectionId:
+    type: string
+    description: The connection ID that created this subscriber.
+  transportType:
+    type: string
+    enum:
+      - tcp
+      - udp
+    description: The transport protocol used for sending/receiving media.
+  hasAudio:
+    type: boolean
+  hasVideo:
+    type: boolean
+  simulcastVideo:
+    type: boolean
+  videoCodec:
+    type: string
+    enum:
+      - VP8
+      - H.264
+    description: The video codec used for this stream, if any.
+  audioCodec:
+    type: string
+    description: The audio codec used for this stream, if any.
+  videoSource:
+    type: string
+    enum:
+      - camera
+      - screen
+    description: The video source for this stream.
+allOf:
+  - $ref: '#/definitions/PeerConnection'
+  - $ref: '#/definitions/ObjectCommon'

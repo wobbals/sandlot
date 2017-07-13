@@ -1,0 +1,43 @@
+properties:
+  candidateType:
+    type: string
+    enum:
+      - host
+      - srflx
+      - turn
+    description: The type of ICE candidate used for sending/receiving media.
+  transportType:
+    type: string
+    enum:
+      - tcp
+      - udp
+    description: The transport protocol used for sending/receiving media.
+  tokboxServer:
+    type: string
+    description: >-
+      The host name of the server that handled this stream. For `routed`
+      sessions, this is the media server for the stream. For `relayed` sessions,
+      this is the TURN relay for the stream.
+      Can be null if the stream came from a `relayed` session and the
+      candidateType is not `turn`.
+  hasAudio:
+    type: boolean
+  hasVideo:
+    type: boolean
+  simulcastVideo:
+    type: boolean
+  videoCodec:
+    type: string
+    enum:
+      - VP8
+      - H.264
+    description: The video codec used for this stream, if any.
+  audioCodec:
+    type: string
+    description: The audio codec used for this stream, if any.
+  videoSource:
+    type: string
+    enum:
+      - camera
+      - screen
+    description: The video source for this stream.
