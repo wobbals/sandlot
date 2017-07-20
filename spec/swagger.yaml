@@ -10,17 +10,32 @@ info:
     Session Monitoring events are sent both as a callback as well as made
     available temporarily through
     [Session Monitoring Events](#tag/Session-Monitoring-Events).
-    ## Objects
+    ## Objects (deprecated - see below)
     Over the course of a session, some stateful data about basic OpenTok
     entities accumulates. The [Session Objects](#tag/Session-Objects) API
     discloses a summary of these basic objects.
 
-    ## Unanswered questions
+    ## Extended Events
+    Objects model will require some stateful processing of multiple log lines /
+    events. Extended events model attempts to supplant Objects model by
+    relieving the stateful requirement for processing data. Using this model,
+    we'll punt Objects to the task of secondary processing.
+    * Connection - add `error`, `reconnect`,
+      - Also add endpoint stats from Objects model for `created`
+    * Stream - add stats from Objects model
+    * Publisher - add `created`, `destroyed`, `reconnect`, and `error`.
+    * Subscriber - same as Publisher
+    * RTCStats - QoS snapshots for publishers and subscribers
+    * Session - `started`, `stopped`
+    * Archive - `started`, `stopped`, metadata?
+
+    ## Unanswered questions / notes
     * Timestamp formatting needs to change. Use ISO8601, you savages.
-    * To search or not to search, that is the question we need to answer about
-    how to make the Objects API more discoverable.
+    * ~To search or not to search, that is the question we need to answer about
+    how to make the Objects API more discoverable.~ - use extended events
     * Events API 1.1: Add session, publisher, and subscriber events.
     * Data export for QoS raw data
+    * Session object: Short view for large sessions?
 
   version: development
 host: 127.0.0.1
@@ -36,8 +51,10 @@ consumes:
 tags:
   - name: Session Monitoring Events
     description: Events tied to Session Monitoring Callbacks
+  - name: Extended Events Model
+    description: Stateless OpenTok application data
   - name: Session Objects
-    description: OpenTok application data
+    description: OpenTok application data (deprecated)
 
 ################################################################################
 

@@ -1,0 +1,5 @@
+type: object
+description: An extended event
+properties:
+  sessionId:
+    $ref: '#/definitions/sessionId'
