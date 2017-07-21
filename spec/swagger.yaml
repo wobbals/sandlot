@@ -20,6 +20,9 @@ info:
     events. Extended events model attempts to supplant Objects model by
     relieving the stateful requirement for processing data. Using this model,
     we'll punt Objects to the task of secondary processing.
+
+    Major additions include:
+
     * Connection - add `error`, `reconnect`,
       - Also add endpoint stats from Objects model for `created`
     * Stream - add stats from Objects model
