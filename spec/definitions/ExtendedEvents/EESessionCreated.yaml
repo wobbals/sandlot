@@ -1,0 +1,10 @@
+type: object
+description: Extended session created event
+allOf:
+  - $ref: '#/definitions/EESession'
+properties:
+  type:
+    type: string
+    enum:
+      - routed
+      - relayed

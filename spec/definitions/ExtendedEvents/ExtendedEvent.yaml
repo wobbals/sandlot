@@ -9,6 +9,12 @@ properties:
       - connectionDestroyed
       - connectionReconnected
       - publisherCreated
+  sessionCreated:
+    $ref: '#/definitions/EESessionCreated'
+  sessionDestroyed:
+    $ref: '#/definitions/EESession'
+  endpointRegistered:
+    $ref: '#/definitions/EEEndpointRegistered'
   connectionCreated:
     $ref: '#/definitions/EEConnectionCreated'
   connectionError:
@@ -23,3 +29,15 @@ properties:
     $ref: '#/definitions/EEPublisher'
   publisherError:
     $ref: '#/definitions/EEPublisherError'
+  publisherReconnected:
+    $ref: '#/definitions/EEPublisher'
+  subscriberCreated:
+    $ref: '#/definitions/EESubscriberCreated'
+  subscriberDestroyed:
+    $ref: '#/definitions/EESubscriber'
+  subscriberReconnected:
+    $ref: '#/definitions/EESubscriber'
+  subscriberError:
+    $ref: '#/definitions/EESubscriberError'
+  rtcStats:
+    $ref: '#/definitions/EERTCStats'

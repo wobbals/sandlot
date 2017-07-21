@@ -1,0 +1,16 @@
+type: object
+description: An extended subscriber event
+allOf:
+  - $ref: '#/definitions/EEObject'
+properties:
+  streamId:
+    type: string
+    description: The stream ID for this subscriber
+    example: e3306e7a
+  subscriberId:
+    type: string
+    description: >-
+      A unique identifier for this subscriber
+  connectionId:
+    type: string
+    description: The connection ID for this subscriber
