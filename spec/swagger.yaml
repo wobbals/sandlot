@@ -33,7 +33,8 @@ info:
     * Subscriber - same as Publisher
     * RTCStats - QoS snapshots for publishers and subscribers
     * Session - `started`, `stopped`
-    * **TBD** Archive - `started`, `stopped`, metadata?
+    * **TBD** Archive - `started`, `stopped`, associated metadata (see archive
+      REST API for inspiration)
 
     ## Unanswered questions / notes
     * Timestamp formatting needs to change. Use ISO8601, you savages.
