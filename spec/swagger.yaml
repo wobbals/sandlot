@@ -31,11 +31,13 @@ info:
 
     ## Unanswered questions / notes
     * Timestamp formatting needs to change. Use ISO8601, you savages.
-    * ~To search or not to search, that is the question we need to answer about
-    how to make the Objects API more discoverable.~ - use extended events
+    * ~~To search or not to search, that is the question we need to answer about
+    how to make the Objects API more discoverable.~~ - **use extended events**
     * Events API 1.1: Add session, publisher, and subscriber events.
     * Data export for QoS raw data
     * Session object: Short view for large sessions?
+    * Splitting up optional object data reported by clientevents from various
+      extended events `created` templates?
 
   version: development
 host: 127.0.0.1

@@ -44,4 +44,4 @@ get:
       schema:
         type: array
         items:
-            $ref: '#/definitions/ExtendedEvent'
+          $ref: '#/definitions/ExtendedEvent'

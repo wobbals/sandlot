@@ -1,5 +1,25 @@
 type: object
 description: An extended event
 properties:
-  sessionId:
-    $ref: '#/definitions/sessionId'
+  type:
+    type: string
+    enum:
+      - connectionCreated
+      - connectionError
+      - connectionDestroyed
+      - connectionReconnected
+      - publisherCreated
+  connectionCreated:
+    $ref: '#/definitions/EEConnectionCreated'
+  connectionError:
+    $ref: '#/definitions/EEConnectionError'
+  connectionDestroyed:
+    $ref: '#/definitions/EEConnection'
+  connectionReconnected:
+    $ref: '#/definitions/EEConnection'
+  publisherCreated:
+    $ref: '#/definitions/EEPublisherCreated'
+  publisherDestroyed:
+    $ref: '#/definitions/EEPublisher'
+  publisherError:
+    $ref: '#/definitions/EEPublisherError'
