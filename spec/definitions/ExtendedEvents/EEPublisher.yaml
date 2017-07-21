@@ -1,0 +1,17 @@
+type: object
+description: An extended publisher event
+allOf:
+  - $ref: '#/definitions/EEObject'
+properties:
+  streamId:
+    type: string
+    description: The stream ID for this publisher
+    example: e3306e7a
+  publisherId:
+    type: string
+    description: >-
+      A unique identifier for this publisher. There may be multiple publishers
+      created for the same stream ID in the case of a `relayed` session type.
+  connectionId:
+    type: string
+    description: the connection ID for this publisher

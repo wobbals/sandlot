@@ -1,0 +1,18 @@
+type: object
+description: Common properties to extended event objects
+properties:
+  sessionId:
+    $ref: "#/definitions/sessionId"
+  projectId:
+    type: integer
+    description: The project ID for this event
+    example: 100
+  timestamp:
+    type: string
+    format: dateTime
+    description: the time this event occurred
+    example: 1986-08-26T10:16:50.52Z
+  eventId:
+    type: string
+    description: A unique identifier for this event
+    example: 55fa9b4c
