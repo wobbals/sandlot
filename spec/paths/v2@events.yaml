@@ -1,7 +1,7 @@
 get:
   tags:
       - Extended Events Model
-  summary: Gets extended event feed for a project
+  summary: Get extended event feed for a project
   parameters:
     - name: sessionId
       in: query

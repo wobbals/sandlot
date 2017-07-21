@@ -4,11 +4,21 @@ properties:
   type:
     type: string
     enum:
+      - sessionCreated
+      - sessionDestroyed
       - connectionCreated
       - connectionError
       - connectionDestroyed
       - connectionReconnected
       - publisherCreated
+      - publisherDestroyed
+      - publisherError
+      - publisherReconnected
+      - subscriberCreated
+      - subscriberDestroyed
+      - subscriberReconnected
+      - subscriberError
+      - rtcStats
   sessionCreated:
     $ref: '#/definitions/EESessionCreated'
   sessionDestroyed:
