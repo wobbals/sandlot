@@ -25,3 +25,6 @@ properties:
         - moderation
   userAgent:
     type: string
+  tokenData:
+    type: string
+    description: data in the token used to authenticate this connection
