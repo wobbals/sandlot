@@ -7,24 +7,24 @@ info:
     monitoring app health as well as for managing apps themselves. This project
     aims to enable both.
 
-    ## Events
+    ## Project Whiskey: Session Monitoring Events History
     Session Monitoring events are sent both as a callback as well as made
     available temporarily through
     [Session Monitoring Events](#tag/Session-Monitoring-Events).
 
-    ## Objects (deprecated - see below)
+    ## Project Hotel: Objects
     Over the course of a session, some stateful data about basic OpenTok
     entities accumulates. The [Session Objects](#tag/Session-Objects) API
     discloses a summary of these basic objects.
 
-    ## Extended Events
+    ## Project Foxtrot: Extended Events
     Objects model will require some stateful processing of multiple log lines /
     events. Extended events model attempts to supplant Objects model by
     relieving the stateful requirement for processing data. Using this model,
     we'll punt Objects to the task of secondary processing, as a consumer of
     this event stream.
 
-    Major additions include:
+    Major additions for extened events model include:
 
     * Connection - add `error`, `reconnect`,
       - Also add endpoint stats from Objects model for `created`
@@ -43,7 +43,7 @@ info:
     * ~~Events API 1.1: Add session, publisher, and subscriber events.~~
       complete with [Extended Events Model](#tag/Extended-Events-Model)
     * ~~Data export for QoS raw data~~
-    * ~~Session object: Short view for large sessions?~~ _Deprecated_
+    * Session object: Short view for large sessions?
     * ~~Splitting up optional object data reported by clientevents from various
       extended events `created` templates?~~ _Complete with EndpointRegistered_
       event
@@ -65,7 +65,7 @@ tags:
   - name: Extended Events Model
     description: Stateless OpenTok application data
   - name: Session Objects
-    description: OpenTok application data (deprecated)
+    description: OpenTok application data
 
 ################################################################################
 
