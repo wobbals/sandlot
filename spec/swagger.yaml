@@ -2,9 +2,23 @@ swagger: '2.0'
 info:
   title: Web-based composition API
   description: |
-    # Introduction
+    # Overview
+    Media recording is a standing requirement of the OpenTok platform.
 
+    [Project Page](https://tokbox.atlassian.net/wiki/spaces/EN/pages/213745786/OpenTok+for+content+creators+-+Richer+content+creation+for+archiving+broadcast)
 
+    [Epic](https://tokbox.atlassian.net/browse/OPENTOK-36645)
+    ## Use cases
+    * Support external media (eg. slides, video) for webinar vertical
+    * Recorded & broadcast content should look identical to real-time experience
+    * Concurrent broadcast and recording
+    * Add animations & transitions to archive/broadcast content
+
+    ## Status Callbacks
+
+    ## Manual recording control
+
+    ## Job request idempotence
   version: development
 host: 127.0.0.1
 basePath: /
@@ -17,8 +31,6 @@ consumes:
 
 ################################################################################
 tags:
-  - name: Advanced Layout Control
-    description: Web-based archiving
 
 ################################################################################
 

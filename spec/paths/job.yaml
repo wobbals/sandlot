@@ -1,0 +1,12 @@
+post:
+  summary: Request a new job
+  parameters:
+    - name: request
+      in: body
+      schema:
+        $ref: '#/definitions/NewJobRequest'
+  responses:
+    202:
+      description: Job accepted
+      schema:
+        $ref: '#/definitions/NewJobResponse'
