@@ -1,5 +1,0 @@
-type: object
-description: An Extended subscriber Error Event
-allOf:
-  - $ref: '#/definitions/EESubscriber'
-  - $ref: '#/definitions/EEError'

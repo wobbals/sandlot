@@ -1,52 +1,9 @@
 swagger: '2.0'
 info:
-  title: OpenTok Informatics API
+  title: Web-based composition API
   description: |
     # Introduction
-    OpenTok application usage data can be useful for developers for both
-    monitoring app health as well as for managing apps themselves. This project
-    aims to enable both.
 
-    ## Project Whiskey: Session Monitoring Events History
-    Session Monitoring events are sent both as a callback as well as made
-    available temporarily through
-    [Session Monitoring Events](#tag/Session-Monitoring-Events).
-
-    ## Project Hotel: Objects
-    Over the course of a session, some stateful data about basic OpenTok
-    entities accumulates. The [Session Objects](#tag/Session-Objects) API
-    discloses a summary of these basic objects.
-
-    ## Project Foxtrot: Extended Events
-    Objects model will require some stateful processing of multiple log lines /
-    events. Extended events model attempts to supplant Objects model by
-    relieving the stateful requirement for processing data. Using this model,
-    we'll punt Objects to the task of secondary processing, as a consumer of
-    this event stream.
-
-    Major additions for extened events model include:
-
-    * Connection - add `error`, `reconnect`,
-      - Also add endpoint stats from Objects model for `created`
-    * Stream - add stats from Objects model
-    * Publisher - add `created`, `destroyed`, `reconnect`, and `error`.
-    * Subscriber - same as Publisher
-    * RTCStats - QoS snapshots for publishers and subscribers
-    * Session - `started`, `stopped`
-    * **TBD** Archive - `started`, `stopped`, associated metadata (see archive
-      REST API for inspiration)
-
-    ## Unanswered questions / notes
-    * Timestamp formatting needs to change. Use ISO8601, you savages.
-    * ~~To search or not to search, that is the question we need to answer about
-    how to make the Objects API more discoverable.~~ - **use extended events**
-    * ~~Events API 1.1: Add session, publisher, and subscriber events.~~
-      complete with [Extended Events Model](#tag/Extended-Events-Model)
-    * ~~Data export for QoS raw data~~
-    * Session object: Short view for large sessions?
-    * ~~Splitting up optional object data reported by clientevents from various
-      extended events `created` templates?~~ _Complete with EndpointRegistered_
-      event
 
   version: development
 host: 127.0.0.1
@@ -60,25 +17,17 @@ consumes:
 
 ################################################################################
 tags:
-  - name: Session Monitoring Events
-    description: Events tied to Session Monitoring Callbacks
-  - name: Extended Events Model
-    description: Stateless OpenTok application data
-  - name: Session Objects
-    description: OpenTok application data
+  - name: Advanced Layout Control
+    description: Web-based archiving
 
 ################################################################################
 
 parameters:
-  resourceId:
+  jobId:
     name: id
     in: path
-    description: The resource identifier string
+    description: The identifier for this job
     type: string
     required: true
 
 ################################################################################
-headers:
-  Pagination-Total:
-    description: Total number of records for this paged query
-    type: integer

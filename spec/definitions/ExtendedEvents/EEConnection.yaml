@@ -1,9 +1,0 @@
-type: object
-description: An Extended Connection Event
-allOf:
-  - $ref: '#/definitions/EEObject'
-properties:
-  connectionId:
-    type: string
-    description: The connection ID for this event
-    example: e457b96a

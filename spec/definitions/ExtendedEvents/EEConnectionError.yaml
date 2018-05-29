@@ -1,5 +1,0 @@
-type: object
-description: An Extended Connection Error Event
-allOf:
-  - $ref: '#/definitions/EEConnection'
-  - $ref: '#/definitions/EEError'

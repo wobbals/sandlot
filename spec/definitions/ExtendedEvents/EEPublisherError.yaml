@@ -1,5 +1,0 @@
-type: object
-description: An Extended Publisher Error Event
-allOf:
-  - $ref: '#/definitions/EEPublisher'
-  - $ref: '#/definitions/EEError'

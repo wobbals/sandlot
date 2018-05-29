@@ -1,8 +1,0 @@
-type: object
-description: Extended event error
-properties:
-  code:
-    type: integer
-    example: 1500
-  reason:
-    type: string

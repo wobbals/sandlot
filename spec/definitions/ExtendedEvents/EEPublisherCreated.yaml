@@ -1,4 +1,0 @@
-type: object
-allOf:
-  - $ref: '#/definitions/EEPublisher'
-  - $ref: '#/definitions/PeerConnection'
