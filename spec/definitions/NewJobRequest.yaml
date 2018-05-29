@@ -31,8 +31,8 @@ properties:
       See [Status Callbacks](#section/Overview/Status-Callbacks)
   maxDuration:
     type: integer
-    maxmium: 21600
     minimum: 0
+    maximum: 21600
     default: 300
     description: |
       The number of seconds this job will be allowed to run. Note that jobs
