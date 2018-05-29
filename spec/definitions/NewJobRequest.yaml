@@ -1,5 +1,7 @@
 type: object
 description: Input parameters for a new job
+required:
+  - url
 properties:
   width:
     type: integer
@@ -9,7 +11,6 @@ properties:
     minimum: 320
     maximum: 1920
     default: 640
-    required: false
   height:
     type: integer
     description: |
@@ -18,15 +19,13 @@ properties:
     minimum: 240
     maximum: 1080
     default: 480
-    required: false
   url:
-    type: url
-    required: true
+    type: string
     description: |
       The URL of the web view that the compositor will use. This *must* be
       publicly accessible.
   callbackURL:
-    type: url
+    type: string
     description: |
       The URL of the status callbacks that will be reported for this job.
       See [Status Callbacks](#section/Overview/Status-Callbacks)
@@ -38,11 +37,10 @@ properties:
       enter `standby` state after launching, and will require a call to
       [manually start job](#) in order to begin recording.
   launchTime:
-    type: ISO8601 string
+    type: string
     default: immediate
-    required: false
     description: |
-      Timestamp hint to request job availability at a specific time.
+      An ISO8601 String timestamp to request job availability at a specific time
   individualStreamRecord:
     type: boolean
     default: false
@@ -51,13 +49,11 @@ properties:
       If used, job download will be an archive, instead of an individual
       media container.
   broadcastURL:
-    type: URL
-    required: false
+    type: string
     description: |
       An RTMP push URL to send composite output.
   clientToken:
     type: string
-    required: false
     description: |
       A unique, case-sensitive identifier that you provide to ensure the
       idempotency of your job requests. See [Job request idempotence](#)

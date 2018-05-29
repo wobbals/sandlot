@@ -1,2 +1,7 @@
 post:
   description: Manually stop a job
+  parameters:
+    - $ref: '#/parameters/jobId'
+  responses:
+    200:
+      description: OK

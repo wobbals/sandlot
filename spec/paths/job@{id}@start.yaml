@@ -1,2 +1,7 @@
 post:
   description: Manually start a job
+  parameters:
+    - $ref: '#/parameters/jobId'
+  responses:
+    200:
+      description: OK

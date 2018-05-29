@@ -1,2 +1,7 @@
 get:
   description: Get job status
+  parameters:
+    - $ref: '#/parameters/jobId'
+  responses:
+    200:
+      description: OK

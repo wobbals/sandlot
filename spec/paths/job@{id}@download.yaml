@@ -1,2 +1,7 @@
 get:
   description: Download job result
+  parameters:
+    - $ref: '#/parameters/jobId'
+  responses:
+    200:
+      description: OK
