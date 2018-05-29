@@ -29,6 +29,14 @@ properties:
     description: |
       The URL of the status callbacks that will be reported for this job.
       See [Status Callbacks](#section/Overview/Status-Callbacks)
+  maxDuration:
+    type: integer
+    maxmium: 21600
+    minimum: 0
+    default: 300
+    description: |
+      The number of seconds this job will be allowed to run. Note that jobs
+      may be stopped before maxDuration has elapsed by using [Stop Job](#).
   autostart:
     type: boolean
     default: true
