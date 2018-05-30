@@ -2,6 +2,23 @@ get:
   description: Download job result
   parameters:
     - $ref: '#/parameters/jobId'
+    -
+      name: redirect
+      in: query
+      type: boolean
+      description: true to return 302 redirect directly to the download url.
   responses:
     200:
       description: OK
+      schema:
+        type: object
+        properties:
+          downloadURL:
+            type: string
+            description: The URL where this job's output may be downloaded.
+    302:
+      description: Redirect
+      headers:
+        Location:
+          description: A (temporary) URL to download job output.
+          type: string

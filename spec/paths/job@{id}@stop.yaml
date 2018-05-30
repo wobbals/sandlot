@@ -1,7 +1,16 @@
 post:
-  description: Manually stop a job
+  summary: Manually stop a job
+  description: |
+    Manually stops a job. Job status must be `recording` to have any effect.
   parameters:
     - $ref: '#/parameters/jobId'
   responses:
     200:
       description: OK
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - ok

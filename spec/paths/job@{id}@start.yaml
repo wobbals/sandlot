@@ -1,7 +1,16 @@
 post:
-  description: Manually start a job
+  summary: Manually start a job
+  description: |
+    Manually starts a job. Job status must be `standby` to have any effect.
   parameters:
     - $ref: '#/parameters/jobId'
   responses:
     200:
       description: OK
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            enum:
+              - ok
