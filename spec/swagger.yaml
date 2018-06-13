@@ -3,24 +3,71 @@ info:
   title: Web-based composition API
   description: |
     # Overview
-    Media recording is a standing requirement of the OpenTok platform.
+    Media recording is a standing requirement of the OpenTok platform. This
+    project aims to replace the layout management features of OpenTok archiving,
+    and supplement it with any other content that a developer wishes to add
+    to their offline media. Rather than host a proprietary API for managing the
+    layout of individual containers, we expose a web-based archiving mechanism
+    that allows developers to reuse components from their real-time web
+    experience. The archive compositor takes as input a publicly-hosted webpage
+    defined by the developer, an archives the real-time experience for offline
+    consumption.
 
     [Project Page](https://tokbox.atlassian.net/wiki/spaces/EN/pages/213745786/OpenTok+for+content+creators+-+Richer+content+creation+for+archiving+broadcast)
 
     [PRD](https://tokbox.atlassian.net/wiki/spaces/EN/pages/246448171?atlOrigin=eyJpIjoiOTMyYzU3MTU4Y2Y0NDYwNjk3M2Q1YjlkNTJiMjIyZWYiLCJwIjoiYyJ9)
 
     [Epic](https://tokbox.atlassian.net/browse/OPENTOK-36645)
+
     ## Use cases
     * Support external media (eg. slides, video) for webinar vertical
     * Recorded & broadcast content should look identical to real-time experience
     * Concurrent broadcast and recording
     * Add animations & transitions to archive/broadcast content
 
-    ## Status Callbacks
+    ## Status callbacks
+    Status callbacks are issued by the job runner individually. For each status
+    change that occurs during the lifetime of the job, an HTTP POST will be
+    issued to the service URL specified in the `callbackURL` job request input.
+
+    Callback bodies will include the job identifier and the most recent status,
+    for example:
+    ```json
+    {
+        "status": "recording",
+        "jobId": "f251f946-0eba-4301-9234-0273b47073df"
+    }
+    ```
 
     ## Manual recording control
+    Specifying `autostart: false` in the job request will launch the job runner
+    into a `standby` waiting state, visible both in the job status request as
+    well as the status callback. Once in `standby`, the job must be started
+    manually with a call to `/job/:id/start`. After a period of time, standby
+    jobs will be evicted from the cluster if they have not been started.
+
+    Jobs with autostart enabled simply begin recording as soon as the node is
+    online.
+
+    ## Resource planning
+    Job runners take some time to be allocated and enter `recording` or
+    `standby` states. As a result, launch time typically ranges between 5 and
+    180 seconds after a new job request. While not required, it is recommended
+    to specify a launch time in the job request. Providing a `launchTime` in the
+    job request with some time 3-60 minutes into the future will guarantee that
+    an instance is up and running at this exact time. This can be used with or
+    without the `autostart` feature enabled.
 
     ## Job request idempotence
+    When you request a job, the request typically returns before the operation
+    has completed. If the request is triggered by some action that cannot
+    guarantee "exactly once" semantics, it is recommended you provide a token to
+    uniquely identify the actual work being requested. The `clientToken` input
+    parameter is used to deduplicate repeated requests for the same job.
+
+    If the same token is used in multiple job requests, each request will
+    succeed, however only one job will actually start.
+
   version: development
 host: 127.0.0.1
 basePath: /

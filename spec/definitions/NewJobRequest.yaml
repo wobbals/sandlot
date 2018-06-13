@@ -3,6 +3,11 @@ description: Input parameters for a new job
 required:
   - url
 properties:
+  url:
+    type: string
+    description: |
+      The URL of the web view that the compositor will render to archive.
+      This *must* be a publicly accessible webpage.
   width:
     type: integer
     description: |
@@ -19,16 +24,11 @@ properties:
     minimum: 240
     maximum: 1080
     default: 480
-  url:
-    type: string
-    description: |
-      The URL of the web view that the compositor will use. This *must* be
-      publicly accessible.
   callbackURL:
     type: string
     description: |
       The URL of the status callbacks that will be reported for this job.
-      See [Status Callbacks](#section/Overview/Status-Callbacks)
+      See [Status Callbacks](#section/Overview/Status-callbacks)
   maxDuration:
     type: integer
     minimum: 0
@@ -43,12 +43,14 @@ properties:
     description: |
       Whether to start the job immediately upon launch. If `false`, job will
       enter `standby` state after launching, and will require a call to
-      [manually start job](#) in order to begin recording.
+      [manually start job](#section/Overview/Manual-recording-control)
+      in order to begin recording.
   launchTime:
     type: string
     default: immediate
     description: |
-      An ISO8601 String timestamp to request job availability at a specific time
+      An ISO8601 String timestamp to request job availability at a specific
+      time. See [resource planning](#section/Overview/Resource-planning).
   individualStreamRecord:
     type: boolean
     default: false
@@ -62,6 +64,8 @@ properties:
       An RTMP push URL to send composite output.
   clientToken:
     type: string
+    maxLength: 64
     description: |
       A unique, case-sensitive identifier that you provide to ensure the
-      idempotency of your job requests. See [Job request idempotence](#)
+      idempotency of your job requests. See
+      [Job request idempotence](#section/Overview/Job-request-idempotence)
