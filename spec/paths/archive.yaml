@@ -1,12 +1,12 @@
 post:
-  summary: Request a new job
+  summary: Request a new archive
   parameters:
     - name: request
       in: body
       schema:
-        $ref: '#/definitions/NewJobRequest'
+        $ref: '#/definitions/StartArchiveRequest'
   responses:
     202:
       description: Job accepted
       schema:
-        $ref: '#/definitions/NewJobResponse'
+        $ref: '#/definitions/StartArchiveResponse'

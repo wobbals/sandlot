@@ -1,13 +1,12 @@
 type: object
 description: Input parameters for a new job
-required:
-  - url
 properties:
   url:
     type: string
     description: |
       The URL of the web view that the compositor will render to archive.
-      This *must* be a publicly accessible webpage.
+      This *must* be a publicly accessible webpage. Required input if
+      outputType is `webRender`
   width:
     type: integer
     description: |
@@ -24,11 +23,14 @@ properties:
     minimum: 240
     maximum: 1080
     default: 480
-  callbackURL:
+  outputMode:
     type: string
+    enum:
+      - webRender
+      - composite
+      - individual
     description: |
-      The URL of the status callbacks that will be reported for this job.
-      See [Status Callbacks](#section/Overview/Status-callbacks)
+      The type of archive
   maxDuration:
     type: integer
     minimum: 0
@@ -51,17 +53,6 @@ properties:
     description: |
       An ISO8601 String timestamp to request job availability at a specific
       time. See [resource planning](#section/Overview/Resource-planning).
-  individualStreamRecord:
-    type: boolean
-    default: false
-    description: |
-      Job will capture individual stream content for downstream reprocessing.
-      If used, job download will be an archive, instead of an individual
-      media container.
-  broadcastURL:
-    type: string
-    description: |
-      An RTMP push URL to send composite output.
   clientToken:
     type: string
     maxLength: 64
@@ -69,3 +60,26 @@ properties:
       A unique, case-sensitive identifier that you provide to ensure the
       idempotency of your job requests. See
       [Job request idempotence](#section/Overview/Job-request-idempotence)
+  hasAudio:
+    type: boolean
+    description: |
+      Whether to include audio with archive. Ignored for outputType `webRender`.
+  hasVideo:
+    type: boolean
+    description: |
+      Whether to include video with archive. Ignored for outputType `webRender`.
+  sessionId:
+    type: string
+    description: |
+      The session ID to archive. Value ignored for outputType `webRender`.
+  name:
+    type: string
+    description: A name to identify the archive.
+  resolution:
+    type: string
+    description: |
+      The dimensions of the archive in the form `WxH`, with W and H as even
+      integers. Deprecated; use `width` and `height` input fields. Ignored for
+      outputType `individual`, only values allowed for `composite` are `640x480`
+      and `1280x720`. Otherwise, size constraints defined in width/height input
+      parameters.

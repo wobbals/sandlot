@@ -25,19 +25,6 @@ info:
     * Concurrent broadcast and recording
     * Add animations & transitions to archive/broadcast content
 
-    ## Status callbacks
-    Status callbacks are issued by the job runner individually. For each status
-    change that occurs during the lifetime of the job, an HTTP POST will be
-    issued to the service URL specified in the `callbackURL` job request input.
-
-    Callback bodies will include the job identifier and the most recent status,
-    for example:
-    ```json
-    {
-        "status": "recording",
-        "jobId": "f251f946-0eba-4301-9234-0273b47073df"
-    }
-    ```
 
     ## Manual recording control
     Specifying `autostart: false` in the job request will launch the job runner

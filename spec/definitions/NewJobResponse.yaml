@@ -1,8 +1,0 @@
-type: object
-properties:
-  jobId:
-    type: string
-    description: The identifier for this job.
-  accessToken:
-    type: string
-    description: The access token for future requests to this job.

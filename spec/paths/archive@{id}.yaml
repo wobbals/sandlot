@@ -1,5 +1,5 @@
 get:
-  description: Get job status
+  description: Get archive information
   parameters:
     - $ref: '#/parameters/jobId'
   responses:
