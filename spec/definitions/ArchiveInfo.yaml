@@ -1,0 +1,75 @@
+type: object
+properties:
+  id:
+    type: string
+    description: |
+      A unque identifier for this archive.
+  createdAt:
+    type: integer
+    description: The unixtime of the origin of the request
+  duration:
+    type: integer
+    description: |
+      An estimated
+      duration of the archive, once completed. It may differ from the length of
+      the media container(s) of the archive artifact.
+  hasAudio:
+    type: boolean
+    description: |
+      Whether this archive invludes audio. This value is omitted for
+      archives with outputType `webRender`.
+  hasVideo:
+    type: boolean
+    description: |
+      Whether this archive invludes video. This value is omitted for
+      archives with outputType `webRender`.
+  name:
+    type: string
+    description: If supplied in the request, the archive name.
+  reason:
+    type: string
+    description: An empty, undocumented, string.
+  resolution:
+    type: string
+    description: |
+      The dimensions of the archive. Value omitted for archives with outputType
+      `individual`.
+  size:
+    type: integer
+    description: |
+      The size of the archive artifact, when complete.
+  status:
+    type: string
+    enum:
+      - queued
+      - started
+      - standby
+      - initializing
+      - recording
+      - uploading
+      - complete
+      - error
+  url:
+    type: string
+    description: |
+      The download URL for the archive artifact, once completed, if and only if
+      uploaded to TokBox storage.
+
+
+# Existing response object:
+# {
+#   "createdAt" : 1384221730555,
+#   "duration" : 0,
+#   "hasAudio" : true,
+#   "hasVideo" : true,
+#   "id" : "b40ef09b-3811-4726-b508-e41a0f96c68f",
+#   "name" : "The archive name you supplied",
+#   "outputMode" : "composed",
+#   "projectId" : 234567,
+#   "reason" : "",
+#   "resolution" : "640x480",
+#   "sessionId" : "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN",
+#   "size" : 0,
+#   "status" : "started",
+#   "url" : null
+# }

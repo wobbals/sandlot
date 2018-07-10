@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Anvil mimic
   description: Get archive information
   parameters:
     - $ref: '#/parameters/jobId'
@@ -6,4 +8,4 @@ get:
     200:
       description: OK
       schema:
-        $ref: '#/definitions/JobStatus'
+        $ref: '#/definitions/ArchiveInfo'

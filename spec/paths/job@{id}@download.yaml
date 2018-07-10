@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Legacy
   description: Download job result
   parameters:
     - $ref: '#/parameters/jobId'

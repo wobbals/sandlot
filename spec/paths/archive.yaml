@@ -1,4 +1,6 @@
 post:
+  tags:
+    - Anvil mimic
   summary: Request a new archive
   parameters:
     - name: request

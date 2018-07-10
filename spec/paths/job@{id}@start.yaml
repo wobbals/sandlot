@@ -1,4 +1,6 @@
 post:
+  tags:
+    - Legacy
   summary: Manually start a job
   description: |
     Manually starts a job. Job status must be `standby` to have any effect.
