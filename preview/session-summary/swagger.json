@@ -1,0 +1,1218 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenTok Informatics API",
+    "description": "# Introduction\nOpenTok application usage data can be useful for developers for both\nmonitoring app health as well as for managing apps themselves. This project\naims to enable both.\n\n## Project Whiskey: Session Monitoring Events History\nSession Monitoring events are sent both as a callback as well as made\navailable temporarily through\n[Session Monitoring Events](#tag/Session-Monitoring-Events).\n\n## Project Hotel: Objects\nOver the course of a session, some stateful data about basic OpenTok\nentities accumulates. The [Session Objects](#tag/Session-Objects) API\ndiscloses a summary of these basic objects.\n\n## Project Foxtrot: Extended Events\nObjects model will require some stateful processing of multiple log lines /\nevents. Extended events model attempts to supplant Objects model by\nrelieving the stateful requirement for processing data. Using this model,\nwe'll punt Objects to the task of secondary processing, as a consumer of\nthis event stream.\n\nMajor additions for extened events model include:\n\n* Connection - add `error`, `reconnect`,\n  - Also add endpoint stats from Objects model for `created`\n* Stream - add stats from Objects model\n* Publisher - add `created`, `destroyed`, `reconnect`, and `error`.\n* Subscriber - same as Publisher\n* RTCStats - QoS snapshots for publishers and subscribers\n* Session - `started`, `stopped`\n* **TBD** Archive - `started`, `stopped`, associated metadata (see archive\n  REST API for inspiration)\n\n## Unanswered questions / notes\n* Timestamp formatting needs to change. Use ISO8601, you savages.\n* ~~To search or not to search, that is the question we need to answer about\nhow to make the Objects API more discoverable.~~ - **use extended events**\n* ~~Events API 1.1: Add session, publisher, and subscriber events.~~\n  complete with [Extended Events Model](#tag/Extended-Events-Model)\n* ~~Data export for QoS raw data~~\n* Session object: Short view for large sessions?\n* ~~Splitting up optional object data reported by clientevents from various\n  extended events `created` templates?~~ _Complete with EndpointRegistered_\n  event\n",
+    "version": "development"
+  },
+  "host": "127.0.0.1",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Session Monitoring Events",
+      "description": "Events tied to Session Monitoring Callbacks"
+    },
+    {
+      "name": "Extended Events Model",
+      "description": "Stateless OpenTok application data"
+    },
+    {
+      "name": "Session Objects",
+      "description": "OpenTok application data"
+    }
+  ],
+  "parameters": {
+    "resourceId": {
+      "name": "id",
+      "in": "path",
+      "description": "The resource identifier string",
+      "type": "string",
+      "required": true
+    }
+  },
+  "paths": {
+    "/connection/{id}": {
+      "get": {
+        "tags": [
+          "Session Objects"
+        ],
+        "description": "Describe a Connection",
+        "parameters": [
+          {
+            "$ref": "#/parameters/resourceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ConnectionObject"
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "tags": [
+          "Session Monitoring Events"
+        ],
+        "summary": "Gets events for the project",
+        "parameters": [
+          {
+            "name": "event",
+            "in": "query",
+            "description": "Filters for the given event names",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "connectionCreated",
+                "connectionDestroyed",
+                "streamCreated",
+                "streamDestroyed"
+              ]
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "query",
+            "description": "Filters for events belonging to a given session ID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Lower bound on the time of event. Events returned will not be earlier than this timestamp.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "description": "Upper bound on the time of event. Events returned will not be later than this timestamp.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Pagination offset for the given query.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The number of results to include in the response.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 100,
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Everything's shiny, Captain, not to fret.",
+            "headers": {
+              "Pagination-Total": {
+                "description": "Total number of records for this paged query",
+                "type": "integer"
+              }
+            },
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/event"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publisher/{id}": {
+      "get": {
+        "tags": [
+          "Session Objects"
+        ],
+        "summary": "Describe a Publisher",
+        "description": "For routed session types, there is a single object for each Publisher _and_ Subscriber in the session. For relayed sessions, there may be multiple distinct Publisher-type streams, if the endpoint pushes streams to multiple peers.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/resourceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Publisher"
+            }
+          }
+        }
+      }
+    },
+    "/session/{id}": {
+      "get": {
+        "tags": [
+          "Session Objects"
+        ],
+        "description": "Describe a Session",
+        "parameters": [
+          {
+            "$ref": "#/parameters/resourceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Session"
+            }
+          }
+        }
+      }
+    },
+    "/subscriber/{id}": {
+      "get": {
+        "tags": [
+          "Session Objects"
+        ],
+        "description": "Describe a Subscriber",
+        "parameters": [
+          {
+            "$ref": "#/parameters/resourceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subscriber"
+            }
+          }
+        }
+      }
+    },
+    "/v2/events": {
+      "get": {
+        "tags": [
+          "Extended Events Model"
+        ],
+        "summary": "Get extended event feed for a project",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "query",
+            "description": "Filters for events belonging to a given session ID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Lower bound on the time of event. Events returned will not be earlier than this timestamp.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "description": "Upper bound on the time of event. Events returned will not be later than this timestamp.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Pagination offset for the given query.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "The number of results to include in the response.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 500,
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Pagination-Total": {
+                "description": "Total number of records for this paged query",
+                "type": "integer"
+              }
+            },
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ExtendedEvent"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ConnectionObject": {
+      "type": "object",
+      "description": "A connection Object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for this connection",
+          "example": "c053fcc8"
+        },
+        "guid": {
+          "type": "string",
+          "description": "A persistent identifier for this endpoint. Usually consistant across multiple browser page loads, etc."
+        },
+        "tokboxServer": {
+          "type": "string",
+          "description": "The host name of the server that hosted this connection."
+        },
+        "remoteIp": {
+          "type": "string",
+          "description": "The remote IP address for this connection."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "The latitude for this remote IP address."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "The longitude for this remote IP address."
+        },
+        "userAgent": {
+          "type": "string",
+          "description": "The user agent string for this connection."
+        },
+        "endpointName": {
+          "type": "string",
+          "description": "The name of the endpoint that made this connection. This can be a browser name, like `Chrome` or `Firefox`, or can also be a mobile device name, like `iPhone7,1`."
+        },
+        "endpointVersion": {
+          "type": "string",
+          "description": "The version of the endpoint. This will be browser version for JS endpoints, and an OS version for native clients."
+        },
+        "sdkVersion": {
+          "type": "string",
+          "description": "The version of the OpenTok SDK that made this connection."
+        },
+        "tokenData": {
+          "type": "string",
+          "description": "The token data for this connection."
+        },
+        "networkStatus": {
+          "type": "string",
+          "enum": [
+            "wwan",
+            "wifi"
+          ],
+          "description": "The network access type for this connection."
+        },
+        "ipVersion": {
+          "type": "string",
+          "description": "The version of the IP version used to connect.",
+          "enum": [
+            "IPv4",
+            "IPv6"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/ObjectCommon"
+        }
+      ]
+    },
+    "ConnectionEvent": {
+      "type": "object",
+      "description": "An event summary for a Connection event. Object will only be present if event type is one of `connectionCreated` or `connectionDestroyed`.",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "description": "A unique identifier for this connection",
+          "example": "c053fcc8"
+        },
+        "createdAt": {
+          "type": "integer",
+          "description": "Timestamp of the creation time for this connection"
+        },
+        "data": {
+          "type": "string",
+          "description": "The token data for this connection."
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "description": "A Session Monitoring event",
+      "properties": {
+        "sessionId": {
+          "description": "The Session ID for this event",
+          "allOf": [
+            {
+              "$ref": "#/definitions/sessionId"
+            }
+          ]
+        },
+        "projectId": {
+          "description": "The project ID for this session",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "The timestamp this event occurred.",
+          "type": "integer"
+        },
+        "event": {
+          "description": "The name of the event",
+          "type": "string",
+          "enum": [
+            "connectionCreated",
+            "connectionDestroyed",
+            "streamCreated",
+            "streamDestroyed"
+          ]
+        },
+        "connection": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConnectionEvent"
+            }
+          ]
+        },
+        "stream": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/StreamEvent"
+            }
+          ]
+        }
+      }
+    },
+    "StreamEvent": {
+      "type": "object",
+      "description": "An event summary for a Stream event. Object will only be present if event type is one of `streamCreated` or `streamDestroyed`.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "videoType": {
+          "type": "string",
+          "enum": [
+            "camera",
+            "screen"
+          ]
+        },
+        "connection": {
+          "$ref": "#/definitions/ConnectionEvent"
+        }
+      }
+    },
+    "EEConnection": {
+      "type": "object",
+      "description": "An Extended Connection Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEObject"
+        }
+      ],
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "description": "The connection ID for this event",
+          "example": "e457b96a"
+        }
+      }
+    },
+    "EEConnectionCreated": {
+      "type": "object",
+      "description": "An Extended Connection Created Event. TODO- This may split into multiple event types if the connection properties are reported separately (and optionally) from the guaranteed `connectionCreated` log line.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEConnection"
+        }
+      ],
+      "properties": {
+        "guid": {
+          "type": "string",
+          "description": "A persistent identifier for this endpoint. Usually consistant across multiple browser page loads, etc."
+        },
+        "tokboxServer": {
+          "type": "string",
+          "description": "The host name of the server that hosted this connection."
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "publish",
+              "subscribe",
+              "signal",
+              "moderation"
+            ]
+          }
+        },
+        "userAgent": {
+          "type": "string"
+        },
+        "tokenData": {
+          "type": "string",
+          "description": "data in the token used to authenticate this connection"
+        }
+      }
+    },
+    "EEConnectionError": {
+      "type": "object",
+      "description": "An Extended Connection Error Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEConnection"
+        },
+        {
+          "$ref": "#/definitions/EEError"
+        }
+      ]
+    },
+    "EEEndpointRegistered": {
+      "type": "object",
+      "description": "An optional registration sent from the endpoint. A unique guid in this event does not guarantee uniqueness of endpoint attributes. For example, a guid may be preserved through an upgrade of a browser version.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEConnection"
+        }
+      ],
+      "properties": {
+        "guid": {
+          "type": "string",
+          "description": "A persistent identifier for this endpoint. Usually consistant across multiple browser page loads, etc."
+        },
+        "tokboxServer": {
+          "type": "string",
+          "description": "The host name of the server that hosted this connection."
+        },
+        "remoteIp": {
+          "type": "string",
+          "description": "The remote IP address for this connection."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "The latitude for this remote IP address."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "The longitude for this remote IP address."
+        },
+        "userAgent": {
+          "type": "string",
+          "description": "The user agent string for this connection."
+        },
+        "endpointName": {
+          "type": "string",
+          "description": "The name of the endpoint that made this connection. This can be a browser name, like `Chrome` or `Firefox`, or can also be a mobile device name, like `iPhone7,1`."
+        },
+        "endpointVersion": {
+          "type": "string",
+          "description": "The version of the endpoint. This will be browser version for JS endpoints, and an OS version for native clients."
+        },
+        "sdkVersion": {
+          "type": "string",
+          "description": "The version of the OpenTok SDK that made this connection."
+        },
+        "tokenData": {
+          "type": "string",
+          "description": "The token data for this connection."
+        },
+        "networkStatus": {
+          "type": "string",
+          "enum": [
+            "wwan",
+            "wifi"
+          ],
+          "description": "The network access type for this connection."
+        },
+        "ipVersion": {
+          "type": "string",
+          "description": "The version of the IP version used to connect.",
+          "enum": [
+            "IPv4",
+            "IPv6"
+          ]
+        }
+      }
+    },
+    "EEError": {
+      "type": "object",
+      "description": "Extended event error",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 1500
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "EEObject": {
+      "type": "object",
+      "description": "Common properties to extended event objects",
+      "properties": {
+        "sessionId": {
+          "$ref": "#/definitions/sessionId"
+        },
+        "projectId": {
+          "type": "integer",
+          "description": "The project ID for this event",
+          "example": 100
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "dateTime",
+          "description": "the time this event occurred",
+          "example": "1986-08-26T10:16:50.520Z"
+        },
+        "eventId": {
+          "type": "string",
+          "description": "A unique identifier for this event",
+          "example": "55fa9b4c"
+        }
+      }
+    },
+    "EEPublisher": {
+      "type": "object",
+      "description": "An extended publisher event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEObject"
+        }
+      ],
+      "properties": {
+        "streamId": {
+          "type": "string",
+          "description": "The stream ID for this publisher",
+          "example": "e3306e7a"
+        },
+        "publisherId": {
+          "type": "string",
+          "description": "A unique identifier for this publisher. There may be multiple publishers created for the same stream ID in the case of a `relayed` session type."
+        },
+        "connectionId": {
+          "type": "string",
+          "description": "the connection ID for this publisher"
+        }
+      }
+    },
+    "EEPublisherCreated": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEPublisher"
+        },
+        {
+          "$ref": "#/definitions/PeerConnection"
+        }
+      ]
+    },
+    "EEPublisherError": {
+      "type": "object",
+      "description": "An Extended Publisher Error Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEPublisher"
+        },
+        {
+          "$ref": "#/definitions/EEError"
+        }
+      ]
+    },
+    "EERTCStats": {
+      "type": "object",
+      "description": "A snapshot of WebRTC stats for a publisher or subscriber.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEObject"
+        }
+      ],
+      "properties": {
+        "streamId": {
+          "type": "string"
+        },
+        "objectType": {
+          "type": "string",
+          "enum": [
+            "subscriber",
+            "publisher"
+          ]
+        },
+        "period": {
+          "type": "integer",
+          "description": "the interval time between consecutive reports"
+        },
+        "duration": {
+          "type": "integer",
+          "description": "the amount of time this stream has been running"
+        },
+        "hasAudio": {
+          "type": "boolean",
+          "description": "true if there is audio on this stream"
+        },
+        "hasVideo": {
+          "type": "boolean",
+          "description": "true if there is video on this stream"
+        },
+        "videoSource": {
+          "type": "string",
+          "description": "the source for the video stream",
+          "enum": [
+            "camera",
+            "screen"
+          ]
+        },
+        "audioRecvBytes": {
+          "type": "integer",
+          "description": "received audio bytes"
+        },
+        "audioSentBytes": {
+          "type": "integer",
+          "description": "sent audio bytes"
+        },
+        "videoRecvBytes": {
+          "type": "integer",
+          "description": "received video bytes"
+        },
+        "videoSentBytes": {
+          "type": "integer",
+          "description": "sent video bytes"
+        },
+        "audioSentPackets": {
+          "type": "integer",
+          "description": "sent audio packets"
+        },
+        "videoSentPackets": {
+          "type": "integer",
+          "description": "sent video packets"
+        },
+        "audioSentPacketsLost": {
+          "type": "integer",
+          "description": "sent audio packets lost"
+        },
+        "videoSentPacketsLost": {
+          "type": "integer",
+          "description": "sent video packets lost"
+        },
+        "audioRecvPackets": {
+          "type": "integer",
+          "description": "received audio packets"
+        },
+        "videoRecvPackets": {
+          "type": "integer",
+          "description": "received video packets"
+        },
+        "audioRecvPacketsLost": {
+          "type": "integer",
+          "description": "received audio packets lost"
+        },
+        "videoRecvPacketsLost": {
+          "type": "integer",
+          "description": "received video packets lost"
+        },
+        "audioCodec": {
+          "type": "string",
+          "description": "the currently active audio codec"
+        },
+        "videoCodec": {
+          "type": "string",
+          "description": "the currently active video codec"
+        },
+        "audioLocalCandidateType": {
+          "type": "string",
+          "description": "the currently active local ICE candidate for audio",
+          "enum": [
+            "local",
+            "srflx",
+            "prflx",
+            "relay"
+          ]
+        },
+        "audioRemoteCandidateType": {
+          "type": "string",
+          "description": "the currently active local ICE candidate for audio",
+          "enum": [
+            "local",
+            "srflx",
+            "prflx",
+            "relay"
+          ]
+        },
+        "videoLocalCandidateType": {
+          "type": "string",
+          "description": "the currently active local ICE candidate for video",
+          "enum": [
+            "local",
+            "srflx",
+            "prflx",
+            "relay"
+          ]
+        },
+        "videoRemoteCandidateType": {
+          "type": "string",
+          "description": "the currently active local ICE candidate for video",
+          "enum": [
+            "local",
+            "srflx",
+            "prflx",
+            "relay"
+          ]
+        },
+        "audioTransportType": {
+          "type": "string",
+          "enum": [
+            "tcp",
+            "udp"
+          ],
+          "description": "The transport protocol used for sending/receiving audio"
+        },
+        "videoTransportType": {
+          "type": "string",
+          "enum": [
+            "tcp",
+            "udp"
+          ],
+          "description": "The transport protocol used for sending/receiving video"
+        },
+        "scalableVideo": {
+          "type": "boolean",
+          "description": "true if scalable video encoding is used on this stream"
+        },
+        "videoWidthCaptured": {
+          "type": "integer",
+          "description": "width of the captured video stream"
+        },
+        "videoWidthEncoded": {
+          "type": "integer",
+          "description": "width of the encoded video stream"
+        },
+        "videoWidthRendered": {
+          "type": "integer",
+          "description": "width of the element displaying this video stream"
+        },
+        "videoHeightCaptured": {
+          "type": "integer",
+          "description": "height of the captured video stream"
+        },
+        "videoHeightEncoded": {
+          "type": "integer",
+          "description": "height of the encoded video stream"
+        },
+        "videoHeightRendered": {
+          "type": "integer",
+          "description": "height of the element displaying this video stream"
+        }
+      }
+    },
+    "EESession": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEObject"
+        }
+      ]
+    },
+    "EESessionCreated": {
+      "type": "object",
+      "description": "Extended session created event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EESession"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "routed",
+            "relayed"
+          ]
+        }
+      }
+    },
+    "EESubscriber": {
+      "type": "object",
+      "description": "An extended subscriber event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EEObject"
+        }
+      ],
+      "properties": {
+        "streamId": {
+          "type": "string",
+          "description": "The stream ID for this subscriber",
+          "example": "e3306e7a"
+        },
+        "subscriberId": {
+          "type": "string",
+          "description": "A unique identifier for this subscriber"
+        },
+        "connectionId": {
+          "type": "string",
+          "description": "The connection ID for this subscriber"
+        }
+      }
+    },
+    "EESubscriberCreated": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EESubscriber"
+        },
+        {
+          "$ref": "#/definitions/PeerConnection"
+        }
+      ]
+    },
+    "EESubscriberError": {
+      "type": "object",
+      "description": "An Extended subscriber Error Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EESubscriber"
+        },
+        {
+          "$ref": "#/definitions/EEError"
+        }
+      ]
+    },
+    "ExtendedEvent": {
+      "type": "object",
+      "description": "An extended event",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "sessionCreated",
+            "sessionDestroyed",
+            "connectionCreated",
+            "connectionError",
+            "connectionDestroyed",
+            "connectionReconnected",
+            "publisherCreated",
+            "publisherDestroyed",
+            "publisherError",
+            "publisherReconnected",
+            "subscriberCreated",
+            "subscriberDestroyed",
+            "subscriberReconnected",
+            "subscriberError",
+            "rtcStats"
+          ]
+        },
+        "sessionCreated": {
+          "$ref": "#/definitions/EESessionCreated"
+        },
+        "sessionDestroyed": {
+          "$ref": "#/definitions/EESession"
+        },
+        "endpointRegistered": {
+          "$ref": "#/definitions/EEEndpointRegistered"
+        },
+        "connectionCreated": {
+          "$ref": "#/definitions/EEConnectionCreated"
+        },
+        "connectionError": {
+          "$ref": "#/definitions/EEConnectionError"
+        },
+        "connectionDestroyed": {
+          "$ref": "#/definitions/EEConnection"
+        },
+        "connectionReconnected": {
+          "$ref": "#/definitions/EEConnection"
+        },
+        "publisherCreated": {
+          "$ref": "#/definitions/EEPublisherCreated"
+        },
+        "publisherDestroyed": {
+          "$ref": "#/definitions/EEPublisher"
+        },
+        "publisherError": {
+          "$ref": "#/definitions/EEPublisherError"
+        },
+        "publisherReconnected": {
+          "$ref": "#/definitions/EEPublisher"
+        },
+        "subscriberCreated": {
+          "$ref": "#/definitions/EESubscriberCreated"
+        },
+        "subscriberDestroyed": {
+          "$ref": "#/definitions/EESubscriber"
+        },
+        "subscriberReconnected": {
+          "$ref": "#/definitions/EESubscriber"
+        },
+        "subscriberError": {
+          "$ref": "#/definitions/EESubscriberError"
+        },
+        "rtcStats": {
+          "$ref": "#/definitions/EERTCStats"
+        }
+      }
+    },
+    "ObjectCommon": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "integer",
+          "description": "The time this object was created."
+        },
+        "destroyedAt": {
+          "type": "integer",
+          "description": "The timestamp this object was destroyed."
+        },
+        "duration": {
+          "type": "integer",
+          "description": "The amount of time this object was alive, in seconds."
+        },
+        "sessionId": {
+          "$ref": "#/definitions/sessionId"
+        }
+      }
+    },
+    "PeerConnection": {
+      "properties": {
+        "candidateType": {
+          "type": "string",
+          "enum": [
+            "host",
+            "srflx",
+            "turn"
+          ],
+          "description": "The type of ICE candidate used for sending/receiving media."
+        },
+        "transportType": {
+          "type": "string",
+          "enum": [
+            "tcp",
+            "udp"
+          ],
+          "description": "The transport protocol used for sending/receiving media."
+        },
+        "tokboxServer": {
+          "type": "string",
+          "description": "The host name of the server that handled this stream. For `routed` sessions, this is the media server for the stream. For `relayed` sessions, this is the TURN relay for the stream. Can be null if the stream came from a `relayed` session and the candidateType is not `turn`."
+        },
+        "hasAudio": {
+          "type": "boolean"
+        },
+        "hasVideo": {
+          "type": "boolean"
+        },
+        "simulcastVideo": {
+          "type": "boolean"
+        },
+        "videoCodec": {
+          "type": "string",
+          "enum": [
+            "VP8",
+            "H.264"
+          ],
+          "description": "The video codec used for this stream, if any."
+        },
+        "audioCodec": {
+          "type": "string",
+          "description": "The audio codec used for this stream, if any."
+        },
+        "videoSource": {
+          "type": "string",
+          "enum": [
+            "camera",
+            "screen"
+          ],
+          "description": "The video source for this stream."
+        }
+      }
+    },
+    "Publisher": {
+      "type": "object",
+      "description": "Represents a Publisher.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the publisher. This is a unique identifier all instances, whereas a Publisher-Subcriber pair will share the same Stream ID."
+        },
+        "streamId": {
+          "type": "string",
+          "description": "The Stream ID of the publisher."
+        },
+        "connectionId": {
+          "type": "string",
+          "description": "The connection ID that created this publisher."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PeerConnection"
+        },
+        {
+          "$ref": "#/definitions/ObjectCommon"
+        }
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "description": "a Session description",
+      "properties": {
+        "id": {
+          "description": "The ID of this session",
+          "$ref": "#/definitions/sessionId"
+        },
+        "startedAt": {
+          "type": "integer",
+          "description": "The timestamp of the first connection joined to this session."
+        },
+        "completedAt": {
+          "type": "integer",
+          "description": "The timestamp of the last disconnect from this session, resulting in zero total connections to the session. Note that if a session is reused for multiple conversations between endpoints, the difference between this and the startedAt field will not reflect the time between different conversations."
+        },
+        "duration": {
+          "type": "integer",
+          "description": "the number of seconds this session was live"
+        },
+        "type": {
+          "description": "the type of session",
+          "type": "string",
+          "enum": [
+            "routed",
+            "relayed"
+          ]
+        },
+        "projectId": {
+          "type": "integer",
+          "description": "the project to which this session belongs"
+        },
+        "publishers": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/Publisher"
+              }
+            ]
+          }
+        },
+        "subscribers": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/Subscriber"
+              }
+            ]
+          }
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/ConnectionObject"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "sessionId": {
+      "example": "2_MX4xMzExMjU3MX5-MTQ3MDI1NzY3OTkxOH45QXRr",
+      "type": "string",
+      "description": "The session ID associated with this object."
+    },
+    "Subscriber": {
+      "type": "object",
+      "description": "Represents a Subscriber.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the subscriber."
+        },
+        "streamId": {
+          "type": "string",
+          "description": "The Stream ID for this subscriber."
+        },
+        "connectionId": {
+          "type": "string",
+          "description": "The connection ID that created this subscriber."
+        },
+        "transportType": {
+          "type": "string",
+          "enum": [
+            "tcp",
+            "udp"
+          ],
+          "description": "The transport protocol used for sending/receiving media."
+        },
+        "hasAudio": {
+          "type": "boolean"
+        },
+        "hasVideo": {
+          "type": "boolean"
+        },
+        "simulcastVideo": {
+          "type": "boolean"
+        },
+        "videoCodec": {
+          "type": "string",
+          "enum": [
+            "VP8",
+            "H.264"
+          ],
+          "description": "The video codec used for this stream, if any."
+        },
+        "audioCodec": {
+          "type": "string",
+          "description": "The audio codec used for this stream, if any."
+        },
+        "videoSource": {
+          "type": "string",
+          "enum": [
+            "camera",
+            "screen"
+          ],
+          "description": "The video source for this stream."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PeerConnection"
+        },
+        {
+          "$ref": "#/definitions/ObjectCommon"
+        }
+      ]
+    }
+  }
+}

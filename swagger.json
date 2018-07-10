@@ -1,0 +1,389 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Web-based composition API",
+    "description": "# Overview\nMedia recording is a standing requirement of the OpenTok platform. This\nproject aims to replace the layout management features of OpenTok archiving,\nand supplement it with any other content that a developer wishes to add\nto their offline media. Rather than host a proprietary API for managing the\nlayout of individual containers, we expose a web-based archiving mechanism\nthat allows developers to reuse components from their real-time web\nexperience. The archive compositor takes as input a publicly-hosted webpage\ndefined by the developer, an archives the real-time experience for offline\nconsumption.\n\n[Project Page](https://tokbox.atlassian.net/wiki/spaces/EN/pages/213745786/OpenTok+for+content+creators+-+Richer+content+creation+for+archiving+broadcast)\n\n[PRD](https://tokbox.atlassian.net/wiki/spaces/EN/pages/246448171?atlOrigin=eyJpIjoiOTMyYzU3MTU4Y2Y0NDYwNjk3M2Q1YjlkNTJiMjIyZWYiLCJwIjoiYyJ9)\n\n[Epic](https://tokbox.atlassian.net/browse/OPENTOK-36645)\n\n## Use cases\n* Support external media (eg. slides, video) for webinar vertical\n* Recorded & broadcast content should look identical to real-time experience\n* Concurrent broadcast and recording\n* Add animations & transitions to archive/broadcast content\n\n\n## Manual recording control\nSpecifying `autostart: false` in the job request will launch the job runner\ninto a `standby` waiting state, visible both in the job status request as\nwell as the status callback. Once in `standby`, the job must be started\nmanually with a call to `/job/:id/start`. After a period of time, standby\njobs will be evicted from the cluster if they have not been started.\n\nJobs with autostart enabled simply begin recording as soon as the node is\nonline.\n\n## Resource planning\nJob runners take some time to be allocated and enter `recording` or\n`standby` states. As a result, launch time typically ranges between 5 and\n180 seconds after a new job request. While not required, it is recommended\nto specify a launch time in the job request. Providing a `launchTime` in the\njob request with some time 3-60 minutes into the future will guarantee that\nan instance is up and running at this exact time. This can be used with or\nwithout the `autostart` feature enabled.\n\n## Job request idempotence\nWhen you request a job, the request typically returns before the operation\nhas completed. If the request is triggered by some action that cannot\nguarantee \"exactly once\" semantics, it is recommended you provide a token to\nuniquely identify the actual work being requested. The `clientToken` input\nparameter is used to deduplicate repeated requests for the same job.\n\nIf the same token is used in multiple job requests, each request will\nsucceed, however only one job will actually start.\n",
+    "version": "development"
+  },
+  "host": "127.0.0.1",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "parameters": {
+    "jobId": {
+      "name": "id",
+      "in": "path",
+      "description": "The identifier for this job",
+      "type": "string",
+      "required": true
+    }
+  },
+  "paths": {
+    "/archive": {
+      "post": {
+        "tags": [
+          "Anvil mimic"
+        ],
+        "summary": "Request a new archive",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/StartArchiveRequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job accepted",
+            "schema": {
+              "$ref": "#/definitions/StartArchiveResponse"
+            }
+          }
+        }
+      }
+    },
+    "/archive/{id}": {
+      "get": {
+        "tags": [
+          "Anvil mimic"
+        ],
+        "description": "Get archive information",
+        "parameters": [
+          {
+            "$ref": "#/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ArchiveInfo"
+            }
+          }
+        }
+      }
+    },
+    "/job/{id}/download": {
+      "get": {
+        "tags": [
+          "Legacy"
+        ],
+        "description": "Download job result",
+        "parameters": [
+          {
+            "$ref": "#/parameters/jobId"
+          },
+          {
+            "name": "redirect",
+            "in": "query",
+            "type": "boolean",
+            "description": "true to return 302 redirect directly to the download url."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "downloadURL": {
+                  "type": "string",
+                  "description": "The URL where this job's output may be downloaded."
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirect",
+            "headers": {
+              "Location": {
+                "description": "A (temporary) URL to download job output.",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job/{id}/start": {
+      "post": {
+        "tags": [
+          "Legacy"
+        ],
+        "summary": "Manually start a job",
+        "description": "Manually starts a job. Job status must be `standby` to have any effect.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "enum": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job/{id}/stop": {
+      "post": {
+        "tags": [
+          "Legacy"
+        ],
+        "summary": "Manually stop a job",
+        "description": "Manually stops a job. Job status must be `recording` to have any effect.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "enum": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ArchiveInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unque identifier for this archive.\n"
+        },
+        "createdAt": {
+          "type": "integer",
+          "description": "The unixtime of the origin of the request"
+        },
+        "duration": {
+          "type": "integer",
+          "description": "An estimated\nduration of the archive, once completed. It may differ from the length of\nthe media container(s) of the archive artifact.\n"
+        },
+        "hasAudio": {
+          "type": "boolean",
+          "description": "Whether this archive invludes audio. This value is omitted for\narchives with outputType `webRender`.\n"
+        },
+        "hasVideo": {
+          "type": "boolean",
+          "description": "Whether this archive invludes video. This value is omitted for\narchives with outputType `webRender`.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "If supplied in the request, the archive name."
+        },
+        "reason": {
+          "type": "string",
+          "description": "An empty, undocumented, string."
+        },
+        "resolution": {
+          "type": "string",
+          "description": "The dimensions of the archive. Value omitted for archives with outputType\n`individual`.\n"
+        },
+        "size": {
+          "type": "integer",
+          "description": "The size of the archive artifact, when complete.\n"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "started",
+            "standby",
+            "initializing",
+            "recording",
+            "uploading",
+            "complete",
+            "error"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "description": "The download URL for the archive artifact, once completed, if and only if\nuploaded to TokBox storage.\n"
+        }
+      }
+    },
+    "JobStatus": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "standby",
+            "initializing",
+            "recording",
+            "uploading",
+            "complete",
+            "error"
+          ],
+          "description": "The status of this job."
+        }
+      }
+    },
+    "StartArchiveRequest": {
+      "type": "object",
+      "description": "Input parameters for a new job",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The URL of the web view that the compositor will render to archive.\nThis *must* be a publicly accessible webpage. Required input if\noutputType is `webRender`\n"
+        },
+        "width": {
+          "type": "integer",
+          "description": "The width of the compositor output. Resolutions larger than 1280x720 may\nhave lower frame rates.\n",
+          "minimum": 320,
+          "maximum": 1920,
+          "default": 640
+        },
+        "height": {
+          "type": "integer",
+          "description": "The height of the compositor output. Resolutions larger than 1280x720 may\nhave lower frame rates.\n",
+          "minimum": 240,
+          "maximum": 1080,
+          "default": 480
+        },
+        "outputMode": {
+          "type": "string",
+          "enum": [
+            "webRender",
+            "composite",
+            "individual"
+          ],
+          "description": "The type of archive\n"
+        },
+        "maxDuration": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 21600,
+          "default": 300,
+          "description": "The number of seconds this job will be allowed to run. Note that jobs\nmay be stopped before maxDuration has elapsed by using [Stop Job](#).\n"
+        },
+        "autostart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to start the job immediately upon launch. If `false`, job will\nenter `standby` state after launching, and will require a call to\n[manually start job](#section/Overview/Manual-recording-control)\nin order to begin recording.\n"
+        },
+        "launchTime": {
+          "type": "string",
+          "default": "immediate",
+          "description": "An ISO8601 String timestamp to request job availability at a specific\ntime. See [resource planning](#section/Overview/Resource-planning).\n"
+        },
+        "clientToken": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "A unique, case-sensitive identifier that you provide to ensure the\nidempotency of your job requests. See\n[Job request idempotence](#section/Overview/Job-request-idempotence)\n"
+        },
+        "hasAudio": {
+          "type": "boolean",
+          "description": "Whether to include audio with archive. Ignored for outputType `webRender`.\n"
+        },
+        "hasVideo": {
+          "type": "boolean",
+          "description": "Whether to include video with archive. Ignored for outputType `webRender`.\n"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "The session ID to archive. Value ignored for outputType `webRender`.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "A name to identify the archive."
+        },
+        "resolution": {
+          "type": "string",
+          "description": "The dimensions of the archive in the form `WxH`, with W and H as even\nintegers. Deprecated; use `width` and `height` input fields. Ignored for\noutputType `individual`, only values allowed for `composite` are `640x480`\nand `1280x720`. Otherwise, size constraints defined in width/height input\nparameters.\n"
+        }
+      }
+    },
+    "StartArchiveResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unque identifier for this archive.\n"
+        },
+        "createdAt": {
+          "type": "integer",
+          "description": "The unixtime of the origin of the request"
+        },
+        "duration": {
+          "type": "integer",
+          "description": "The number zero. This field will eventually represent an estimated\nduration of the archive, once completed. It may differ from the length of\nthe media container(s) of the archive artifact.\n"
+        },
+        "hasAudio": {
+          "type": "boolean",
+          "description": "Whether this archive invludes audio. This value is omitted for\narchives with outputType `webRender`.\n"
+        },
+        "hasVideo": {
+          "type": "boolean",
+          "description": "Whether this archive invludes video. This value is omitted for\narchives with outputType `webRender`.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "If supplied in the request, the archive name."
+        },
+        "reason": {
+          "type": "string",
+          "description": "An empty, undocumented, string."
+        },
+        "resolution": {
+          "type": "string",
+          "description": "The dimensions of the archive. Value omitted for archives with outputType\n`individual`.\n"
+        },
+        "size": {
+          "type": "integer",
+          "description": "The number zero. This field will eventually represent the size of the\narchive artifact, when complete.\n"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "started",
+            "standby",
+            "initializing",
+            "recording",
+            "uploading",
+            "complete",
+            "error"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "description": "A null field. This field will eventually represent the download URL for\nthe archive artifact, once completed, if and only if uploaded to TokBox\nstorage.\n"
+        }
+      }
+    }
+  }
+}
